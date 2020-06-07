@@ -1,0 +1,12 @@
+{
+  "name": "2048-server",
+  "version": "1.0.0",
+  "description": "socket-io server that serves the 2048 game",
+  "main": "server.js",
+  "author": "Raffi Manissalian",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}

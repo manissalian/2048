@@ -5,8 +5,10 @@ class Grid {
   #columns = 4
   #cells = []
   #shouldSpawn = false
+  #eventEmitter = null
 
-  constructor () {
+  constructor (eventEmitter) {
+    this.#eventEmitter = eventEmitter
     for (let i = 0; i < this.#rows; i += 1) {
       this.#cells[i] = []
 
@@ -23,7 +25,7 @@ class Grid {
     if (this.#cells[rowIndex][columnIndex]) {
       this.spawnCell()
     } else {
-      this.#cells[rowIndex][columnIndex] = new Cell()
+      this.#cells[rowIndex][columnIndex] = new Cell(this.#eventEmitter, [rowIndex, columnIndex])
     }
   }
 
@@ -82,14 +84,17 @@ class Grid {
 
     if (!this.#cells[x2][y2]) {
       this.#cells[x2][y2] = this.#cells[x1][y1]
+      this.#cells[x2][y2].setPosition([x2, y2])
       this.#cells[x1][y1] = null
       pushed = true
       this.#shouldSpawn = true
+      this.#eventEmitter.emit('cellMoved', [x1, y1], [x2, y2])
     } else if (this.#cells[x2][y2].getValue() === this.#cells[x1][y1].getValue()) {
       this.#cells[x2][y2].setValue(this.#cells[x1][y1].getValue() * 2)
       this.#cells[x1][y1] = null
       pushed = true
       this.#shouldSpawn = true
+      this.#eventEmitter.emit('cellMerged', [x1, y1], [x2, y2], this.#cells[x2][y2].getValue())
     }
 
     return pushed
