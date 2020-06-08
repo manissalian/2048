@@ -19,8 +19,16 @@ class Grid {
   }
 
   spawnCell () {
-    const rowIndex = Math.floor(Math.random() * (this.#rows - 1))
-    const columnIndex = Math.floor(Math.random() * (this.#columns - 1))
+    const remainingEmptyCells = []
+    for (let i = 0; i < this.#cells.length; i += 1) {
+      for (let j = 0; j < this.#cells[i].length; j += 1) {
+        if (this.#cells[i][j] === null) remainingEmptyCells.push(i + ',' + j)
+      }
+    }
+
+    const indexes = remainingEmptyCells[Math.floor(Math.random() * (remainingEmptyCells.length - 1))]
+    const rowIndex = indexes.split(',')[0]
+    const columnIndex = indexes.split(',')[1]
 
     if (this.#cells[rowIndex][columnIndex]) {
       this.spawnCell()
@@ -29,42 +37,40 @@ class Grid {
     }
   }
 
-  pushCells (direction) {
-    let pushed = false
-
-    if (direction === 'up') {
+  pullCells (direction) {
+    if (direction === 'down') {
       for (let i = 0; i < this.#columns; i += 1) {
         for (let j = this.#rows - 1; j > 0; j -= 1) {
-          const success = this.pushCell([j, i], [j - 1, i])
-          if (success) pushed = true
+          this.pullCell([j - 1, i], [j, i])
         }
       }
-    } else if (direction === 'down') {
+    } else if (direction === 'up') {
       for (let i = 0; i < this.#columns; i += 1) {
         for (let j = 0; j < this.#rows - 1; j += 1) {
-          const success = this.pushCell([j, i], [j + 1, i])
-          if (success) pushed = true
-        }
-      }
-    } else if (direction === 'left') {
-      for (let i = 0; i < this.#rows; i += 1) {
-        for (let j = this.#columns - 1; j > 0; j -= 1) {
-          const success = this.pushCell([i, j], [i, j - 1])
-          if (success) pushed = true
+          this.pullCell([j + 1, i], [j, i])
         }
       }
     } else if (direction === 'right') {
       for (let i = 0; i < this.#rows; i += 1) {
+        for (let j = this.#columns - 1; j > 0; j -= 1) {
+          this.pullCell([i, j - 1], [i, j])
+        }
+      }
+    } else if (direction === 'left') {
+      for (let i = 0; i < this.#rows; i += 1) {
         for (let j = 0; j < this.#columns - 1; j += 1) {
-          const success = this.pushCell([i, j], [i, j + 1])
-          if (success) pushed = true
+          this.pullCell([i, j + 1], [i, j])
         }
       }
     }
 
-    if (pushed) {
-      this.pushCells(direction)
-    } else if (this.#shouldSpawn) {
+    this.#cells.map(row => {
+      row.map(cell => {
+        if (cell) cell.setImmutable(false)
+      })
+    })
+
+    if (this.#shouldSpawn) {
       this.#shouldSpawn = false
       this.spawnCell()
     }
@@ -72,32 +78,43 @@ class Grid {
 
   // pushes cell1 on cell2 and merges them if possible
   // if cell2 is missing then cell1 will move to cell2's position
-  // returns if push was successful or not
-  pushCell (cell1Indexes, cell2Indexes) {
+  // after moving, it will also try to move again if possible
+  pullCell (cell1Indexes, cell2Indexes) {
     const x1 = cell1Indexes[0]
     const y1 = cell1Indexes[1]
     const x2 = cell2Indexes[0]
     const y2 = cell2Indexes[1]
-    let pushed = false
 
-    if (!this.#cells[x1][y1]) return pushed
+    if (!this.#cells[x1][y1]) return
 
     if (!this.#cells[x2][y2]) {
       this.#cells[x2][y2] = this.#cells[x1][y1]
       this.#cells[x2][y2].setPosition([x2, y2])
       this.#cells[x1][y1] = null
-      pushed = true
+
       this.#shouldSpawn = true
+
       this.#eventEmitter.emit('cellMoved', [x1, y1], [x2, y2])
-    } else if (this.#cells[x2][y2].getValue() === this.#cells[x1][y1].getValue()) {
+
+      const nextCellIndexes = [
+        x1 === x2 ? x2 : x2 + (x2 - x1),
+        y1 === y2 ? y2 : y2 + (y2 - y1)
+      ]
+
+      if (nextCellIndexes[0] < 0 || nextCellIndexes[0] >= this.#rows) return
+      if (nextCellIndexes[1] < 0 || nextCellIndexes[1] >= this.#rows) return
+
+      this.pullCell(cell2Indexes, nextCellIndexes)
+    } else if (this.#cells[x1][y1].getValue() === this.#cells[x2][y2].getValue() &&
+      !this.#cells[x1][y1].isImmutable() && !this.#cells[x2][y2].isImmutable()) {
       this.#cells[x2][y2].setValue(this.#cells[x1][y1].getValue() * 2)
+      this.#cells[x2][y2].setImmutable(true)
       this.#cells[x1][y1] = null
-      pushed = true
+
       this.#shouldSpawn = true
+
       this.#eventEmitter.emit('cellMerged', [x1, y1], [x2, y2], this.#cells[x2][y2].getValue())
     }
-
-    return pushed
   }
 }
 

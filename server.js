@@ -48,7 +48,7 @@ io.on('connection', socket => {
     game.start()
   })
 
-  socket.on('requestPush', direction => {
-    socket.game.getGrid().pushCells(direction)
+  socket.on('requestPull', direction => {
+    socket.game.getGrid().pullCells(direction)
   })
 })

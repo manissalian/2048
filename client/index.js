@@ -58,5 +58,5 @@ document.addEventListener('keydown', e => {
       break
   }
 
-  socket.emit('requestPush', direction)
+  socket.emit('requestPull', direction)
 })

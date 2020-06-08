@@ -2,6 +2,7 @@ class Cell {
   #value = 0
   #eventEmitter = null
   #position = []
+  #immutable = false
 
   constructor (eventEmitter, position) {
     this.#eventEmitter = eventEmitter
@@ -21,12 +22,20 @@ class Cell {
     return this.#position
   }
 
+  isImmutable () {
+    return this.#immutable
+  }
+
   setValue (value) {
     this.#value = value
   }
 
   setPosition (position) {
     this.#position = position
+  }
+
+  setImmutable (immutable) {
+    this.#immutable = immutable
   }
 }
 
