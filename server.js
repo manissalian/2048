@@ -45,6 +45,10 @@ io.on('connection', socket => {
       })
     })
 
+    game.getEventEmitter().on('gameOver', () => {
+      socket.emit('gameOver')
+    })
+
     game.start()
   })
 

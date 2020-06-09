@@ -40,6 +40,10 @@ socket.on('cellMerged', params => {
   fromCellEl.innerHTML = ''
 })
 
+socket.on('gameOver', () => {
+  alert('game over!')
+})
+
 document.addEventListener('keydown', e => {
   let direction
 

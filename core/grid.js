@@ -30,10 +30,12 @@ class Grid {
     const rowIndex = indexes.split(',')[0]
     const columnIndex = indexes.split(',')[1]
 
-    if (this.#cells[rowIndex][columnIndex]) {
-      this.spawnCell()
-    } else {
-      this.#cells[rowIndex][columnIndex] = new Cell(this.#eventEmitter, [rowIndex, columnIndex])
+    this.#cells[rowIndex][columnIndex] = new Cell(this.#eventEmitter, [rowIndex, columnIndex])
+
+    if (remainingEmptyCells.length === 1) {
+      if (this.isGameOver()) {
+        this.#eventEmitter.emit('gameOver')
+      }
     }
   }
 
@@ -115,6 +117,42 @@ class Grid {
 
       this.#eventEmitter.emit('cellMerged', [x1, y1], [x2, y2], this.#cells[x2][y2].getValue())
     }
+  }
+
+  isGameOver () {
+    for (let i = 0; i < this.#columns; i += 1) {
+      for (let j = this.#rows - 1; j > 0; j -= 1) {
+        if (this.#cells[j - 1][i].getValue() === this.#cells[j][i].getValue()) {
+          return false
+        }
+      }
+    }
+
+    for (let i = 0; i < this.#columns; i += 1) {
+      for (let j = 0; j < this.#rows - 1; j += 1) {
+        if (this.#cells[j + 1][i].getValue() === this.#cells[j][i].getValue()) {
+          return false
+        }
+      }
+    }
+
+    for (let i = 0; i < this.#rows; i += 1) {
+      for (let j = this.#columns - 1; j > 0; j -= 1) {
+        if (this.#cells[i][j - 1].getValue() === this.#cells[i][j].getValue()) {
+          return false
+        }
+      }
+    }
+
+    for (let i = 0; i < this.#rows; i += 1) {
+      for (let j = 0; j < this.#columns - 1; j += 1) {
+        if (this.#cells[i][j + 1].getValue() === this.#cells[i][j].getValue()) {
+          return false
+        }
+      }
+    }
+
+    return true
   }
 }
 
