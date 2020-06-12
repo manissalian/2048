@@ -14,11 +14,15 @@
   </head>
   <body>
     <div class="title">2048</div>
+    <div id="game-over" class="display-none">Game over!</div>
     <div id="play-btn-cont" style="text-align: center; margin-top: 10rem">
       <div class="play-btn" onclick="playBtnClicked()">PLAY</div>
     </div>
     <div id="grid-cont" class="display-none">
       <div id="grid"></div>
+    </div>
+    <div class="restart-btn-cont">
+      <div class="restart-btn" onclick="location.reload()">Restart</div>
     </div>
   </body>
 </html>

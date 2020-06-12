@@ -9,6 +9,11 @@ body {
   text-align: center;
 }
 
+#game-over {
+  font-size: 2rem;
+  text-align: center;
+}
+
 .play-btn {
   display: inline-block;
   padding: 0.75rem 9rem;
@@ -21,6 +26,20 @@ body {
   cursor: pointer;
 }
 
+.restart-btn-cont {
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  bottom: 1rem;
+}
+
+.restart-btn {
+  display: inline-block;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
 .display-none {
   display: none !important;
 }
@@ -28,7 +47,7 @@ body {
 #grid-cont {
   display: flex;
   justify-content: center;
-  margin-top: 10rem;
+  margin-top: 7rem;
 }
 
 #grid {

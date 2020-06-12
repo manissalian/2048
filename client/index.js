@@ -71,7 +71,8 @@ socket.on('cellMerged', params => {
 })
 
 socket.on('gameOver', () => {
-  alert('game over!')
+  const gameOverEl = document.getElementById('game-over')
+  gameOverEl.classList.remove('display-none')
 })
 
 document.addEventListener('keydown', e => {
