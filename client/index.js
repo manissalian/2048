@@ -70,8 +70,6 @@ socket.on('gameOver', () => {
 })
 
 document.addEventListener('keydown', e => {
-  if (!gameStarted) return
-
   let direction
 
   switch (e.keyCode) {
@@ -91,13 +89,19 @@ document.addEventListener('keydown', e => {
       return
   }
 
+  requestPull(direction)
+})
+
+const requestPull = (direction) => {
+  if (!gameStarted) return
+
   removeSurplusCells()
   socket.emit('requestPull', direction)
-})
+}
 
 const removeSurplusCells = () => {
   const grid = document.getElementById('grid')
-  const surplusCells = document.querySelectorAll("div[surplus='true']")
+  const surplusCells = document.querySelectorAll('div[surplus="true"]')
 
   for (let i = 0; i < surplusCells.length; i += 1) {
     grid.removeChild(surplusCells[i])

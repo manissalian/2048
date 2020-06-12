@@ -32,6 +32,7 @@ body {
   right: 0;
   text-align: center;
   bottom: 1rem;
+  z-index: 0;
 }
 
 .restart-btn {
@@ -180,11 +181,25 @@ body {
   z-index: -1;
 }
 
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 html {
-  font-size: 13px;
+  font-size: 11px;
 }
 
 @media only screen and (min-width: 380px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media only screen and (min-width: 420px) {
   html {
     font-size: 16px;
   }
