@@ -10,6 +10,7 @@ socket.on('acceptPlayRequest', () => {
 
 socket.on('cellSpawned', cell => {
   const cellEl = document.getElementById(cell.position[0] + '' + cell.position[1])
+  cellEl.classList.add('cell-' + cell.value)
   cellEl.innerHTML = cell.value
 })
 
@@ -21,6 +22,9 @@ socket.on('cellMoved', positions => {
 
   const fromCellEl = document.getElementById(from[0] + '' + from[1])
   const toCellEl = document.getElementById(to[0] + '' + to[1])
+
+  toCellEl.classList.add('cell-' + fromCellEl.innerHTML)
+  fromCellEl.classList.remove('cell-' + fromCellEl.innerHTML)
 
   toCellEl.innerHTML = fromCellEl.innerHTML
   fromCellEl.innerHTML = ''
@@ -35,6 +39,10 @@ socket.on('cellMerged', params => {
 
   const fromCellEl = document.getElementById(from[0] + '' + from[1])
   const toCellEl = document.getElementById(to[0] + '' + to[1])
+
+  toCellEl.classList.add('cell-' + value)
+  toCellEl.classList.remove('cell-' + fromCellEl.innerHTML)
+  fromCellEl.classList.remove('cell-' + fromCellEl.innerHTML)
 
   toCellEl.innerHTML = value
   fromCellEl.innerHTML = ''

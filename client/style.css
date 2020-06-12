@@ -48,6 +48,66 @@ body {
   width: 5rem;
   height: 5rem;
   border: 1px solid white;
-  color: white;
+  color: black;
   font-size: 2rem;
+}
+
+.cell-2 {
+  background-color: #ffc58f;
+}
+
+.cell-4 {
+  background-color: #ffce00;
+}
+
+.cell-8 {
+  background-color: #ffa700;
+}
+
+.cell-16 {
+  background-color: #ec5a00;
+}
+
+.cell-32 {
+  background-color: #d05f00;
+}
+
+.cell-64 {
+  background-color: #8f5600;
+}
+
+.cell-128 {
+  background-color: #da1f00;
+}
+
+.cell-256 {
+  background-color: #cc5566;
+}
+
+.cell-512 {
+  background-color: #ff8877;
+}
+
+.cell-1024 {
+  background-color: #ff4466;
+}
+
+.cell-2048 {
+  background-color: #cc88ee;
+}
+
+.cell-4096 {
+  background-color: #77ccff;
+}
+
+.cell-8192 {
+  background-color: #00aaff;
+}
+
+.cell-16384 {
+  background-color: #0066cc;
+}
+
+.cell-32768 {
+  background-color: #007755;
 }
