@@ -159,3 +159,13 @@ body {
 .zindex0 {
   z-index: 0;
 }
+
+html {
+  font-size: 13px;
+}
+
+@media only screen and (min-width: 380px) {
+  html {
+    font-size: 16px;
+  }
+}

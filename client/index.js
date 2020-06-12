@@ -1,4 +1,6 @@
 const transitionDuration = 0.23
+let gameStarted = false
+
 const playBtnClicked = () => {
   socket.emit('requestPlay')
 }
@@ -7,6 +9,10 @@ socket.on('acceptPlayRequest', () => {
   document.getElementById('play-btn-cont').classList.add('display-none')
   document.getElementById('grid-cont').classList.remove('display-none')
   socket.emit('requestStart')
+})
+
+socket.on('gameStarted', () => {
+  gameStarted = true
 })
 
 socket.on('cellSpawned', cell => {
@@ -69,6 +75,8 @@ socket.on('gameOver', () => {
 })
 
 document.addEventListener('keydown', e => {
+  if (!gameStarted) return
+
   let direction
 
   switch (e.keyCode) {
@@ -84,6 +92,8 @@ document.addEventListener('keydown', e => {
     case 40:
       direction = 'down'
       break
+    default:
+      return
   }
 
   socket.emit('requestPull', direction)

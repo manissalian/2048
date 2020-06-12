@@ -50,9 +50,14 @@ io.on('connection', socket => {
     })
 
     game.start()
+    socket.emit('gameStarted')
   })
 
   socket.on('requestPull', direction => {
     socket.game.getGrid().pullCells(direction)
+  })
+
+  socket.on('disconnect', () => {
+    socket.game = null
   })
 })
