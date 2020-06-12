@@ -1,4 +1,3 @@
-const transitionDuration = 0.23
 let gameStarted = false
 
 const playBtnClicked = () => {
@@ -24,7 +23,6 @@ socket.on('cellSpawned', cell => {
     'cell-c' + cell.position[1],
     'scale33p'
   )
-  cellEl.setAttribute('style', `transition: ${transitionDuration}s all`)
   cellEl.innerHTML = cell.value
   const grid = document.getElementById('grid')
   grid.appendChild(cellEl)
@@ -57,17 +55,13 @@ socket.on('cellMerged', params => {
   const toCellEl = document.getElementsByClassName('cell-r' + to[0] + ' cell-c' + to[1])[0]
 
   fromCellEl.classList.remove('cell-r' + from[0], 'cell-c' + from[1])
-  fromCellEl.classList.add('zindex0')
+  fromCellEl.classList.add('zindex-1')
   fromCellEl.classList.add('cell-r' + to[0], 'cell-c' + to[1])
+  fromCellEl.setAttribute('surplus', true)
 
   toCellEl.classList.add('cell-' + value)
   toCellEl.classList.remove('cell-' + toCellEl.innerHTML)
   toCellEl.innerHTML = value
-
-  setTimeout(() => {
-    const grid = document.getElementById('grid')
-    grid.removeChild(fromCellEl)
-  }, transitionDuration * 1000)
 })
 
 socket.on('gameOver', () => {
@@ -97,5 +91,15 @@ document.addEventListener('keydown', e => {
       return
   }
 
+  removeSurplusCells()
   socket.emit('requestPull', direction)
 })
+
+const removeSurplusCells = () => {
+  const grid = document.getElementById('grid')
+  const surplusCells = document.querySelectorAll("div[surplus='true']")
+
+  for (let i = 0; i < surplusCells.length; i += 1) {
+    grid.removeChild(surplusCells[i])
+  }
+}
