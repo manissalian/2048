@@ -31,25 +31,61 @@ body {
   margin-top: 10rem;
 }
 
-.grid {
+#grid {
   display: flex;
   flex-direction: column;
+  position: relative;
+  width: 20rem;
+  height: 20rem;
   background-color: #8B0000;
-}
-
-.row {
-  display: flex;
+  border: 1px solid white;
+  box-sizing: border-box;
 }
 
 .cell {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
   width: 5rem;
   height: 5rem;
   border: 1px solid white;
+  box-sizing: border-box;
   color: black;
   font-size: 2rem;
+  z-index: 1;
+}
+
+.cell-c0 {
+  left: 0rem;
+}
+
+.cell-c1 {
+  left: 5rem;
+}
+
+.cell-c2 {
+  left: 10rem;
+}
+
+.cell-c3 {
+  left: 15rem;
+}
+
+.cell-r0 {
+  top: 0rem;
+}
+
+.cell-r1 {
+  top: 5rem;
+}
+
+.cell-r2 {
+  top: 10rem;
+}
+
+.cell-r3 {
+  top: 15rem;
 }
 
 .cell-2 {
@@ -110,4 +146,16 @@ body {
 
 .cell-32768 {
   background-color: #007755;
+}
+
+.scale33p {
+  transform: scale(0.33);
+}
+
+.scale100p {
+  transform: scale(1);
+}
+
+.zindex0 {
+  z-index: 0;
 }

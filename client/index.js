@@ -1,3 +1,4 @@
+const transitionDuration = 0.23
 const playBtnClicked = () => {
   socket.emit('requestPlay')
 }
@@ -9,9 +10,23 @@ socket.on('acceptPlayRequest', () => {
 })
 
 socket.on('cellSpawned', cell => {
-  const cellEl = document.getElementById(cell.position[0] + '' + cell.position[1])
-  cellEl.classList.add('cell-' + cell.value)
+  const cellEl = document.createElement('div')
+  cellEl.classList.add(
+    'cell',
+    'cell-' + cell.value,
+    'cell-r' + cell.position[0],
+    'cell-c' + cell.position[1],
+    'scale33p'
+  )
+  cellEl.setAttribute('style', `transition: ${transitionDuration}s all`)
   cellEl.innerHTML = cell.value
+  const grid = document.getElementById('grid')
+  grid.appendChild(cellEl)
+
+  requestAnimationFrame(() => {
+    cellEl.classList.add('scale100p')
+    cellEl.classList.remove('scale33p')
+  })
 })
 
 socket.on('cellMoved', positions => {
@@ -20,14 +35,9 @@ socket.on('cellMoved', positions => {
     to
   } = positions
 
-  const fromCellEl = document.getElementById(from[0] + '' + from[1])
-  const toCellEl = document.getElementById(to[0] + '' + to[1])
-
-  toCellEl.classList.add('cell-' + fromCellEl.innerHTML)
-  fromCellEl.classList.remove('cell-' + fromCellEl.innerHTML)
-
-  toCellEl.innerHTML = fromCellEl.innerHTML
-  fromCellEl.innerHTML = ''
+  const cellEl = document.getElementsByClassName('cell-r' + from[0] + ' cell-c' + from[1])[0]
+  cellEl.classList.remove('cell-r' + from[0], 'cell-c' + from[1])
+  cellEl.classList.add('cell-r' + to[0], 'cell-c' + to[1])
 })
 
 socket.on('cellMerged', params => {
@@ -37,15 +47,21 @@ socket.on('cellMerged', params => {
     value
   } = params
 
-  const fromCellEl = document.getElementById(from[0] + '' + from[1])
-  const toCellEl = document.getElementById(to[0] + '' + to[1])
+  const fromCellEl = document.getElementsByClassName('cell-r' + from[0] + ' cell-c' + from[1])[0]
+  const toCellEl = document.getElementsByClassName('cell-r' + to[0] + ' cell-c' + to[1])[0]
+
+  fromCellEl.classList.remove('cell-r' + from[0], 'cell-c' + from[1])
+  fromCellEl.classList.add('zindex0')
+  fromCellEl.classList.add('cell-r' + to[0], 'cell-c' + to[1])
 
   toCellEl.classList.add('cell-' + value)
-  toCellEl.classList.remove('cell-' + fromCellEl.innerHTML)
-  fromCellEl.classList.remove('cell-' + fromCellEl.innerHTML)
-
+  toCellEl.classList.remove('cell-' + toCellEl.innerHTML)
   toCellEl.innerHTML = value
-  fromCellEl.innerHTML = ''
+
+  setTimeout(() => {
+    const grid = document.getElementById('grid')
+    grid.removeChild(fromCellEl)
+  }, transitionDuration * 1000)
 })
 
 socket.on('gameOver', () => {
